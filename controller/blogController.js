@@ -1,37 +1,35 @@
 const Blogs = require("../models/blog");
 
 exports.index = function (req, res, next) {
+  const blog = Blogs.find();
 
-    const blog = Blogs.find();
+  res.status(200).json({
+    message: "Successfully loaded",
+    data: blog,
+  });
+};
 
-    res.status(200).json({
-      message: "Successfully loaded",
-      data: blog,
-    });
-  };
+exports.add = async (req, res, next) => {
+  const { title, detail } = req.body;
 
+  const blog = new Blog({
+    title: title,
+    detail: detail,
+  });
 
-  exports.add = async (req, res, next)=>{
-    const { title, detail } = req.body; 
+  await blog.save();
 
-    const blog = new Blog({
-        title : title,
-        detail: detail,
-    });
+  res.status(201).json({
+    message: "Successfully added",
+  });
+};
 
-    await blog.save();
+exports.remove = async (req, res, next) => {
+  const { id } = req.params;
 
-    res.status(201).json({
-        message: "Successfully added",
-    });
-  };
+  await Blog.findByIdAndDelete(id);
 
-  exports.remove = async (req, res, next) => {
-    const { id } = req.params;
-
-    await Blog.findByIdAndDelete(id);
-
-    res.status(200).json({
-        message: "Successfully removed",
-    });
-  };
+  res.status(200).json({
+    message: "Successfully removed",
+  });
+};
